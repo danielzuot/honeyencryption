@@ -33,7 +33,7 @@ def next_message(message):
 List of pre-calculated sampling of cumulative distribution values to messages.
 The samples will be evenly spaced and the number of samples will be determined
 by the size of the message space. It will be used for binary search on the
-probability values during decoding.
+probability values during decoding. ([value, msg])
 """
 def get_inverse_cumulative_distr_samples():
     return []
