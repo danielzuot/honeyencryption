@@ -35,5 +35,29 @@ The samples will be evenly spaced and the number of samples will be determined
 by the size of the message space. It will be used for binary search on the
 probability values during decoding. ([value, msg])
 """
-def get_inverse_cumulative_distr_samples():
+def get_inverse_cumul_distr_samples():
     return []
+
+"""
+Class used to bundle all the above functions into one object for easy access.
+"""
+class MessageSpaceProbabilityFxns:
+    """
+    Creator method takes in specified functions.
+    """
+    def __init__(self, cumul, prob, next_msg, inverse_samples):
+        self.cumul = cumul
+        self.prob = prob
+        self.next_msg = next_msg
+        self.inverse_samples = inverse_samples
+        
+    def cumul_distr(m):
+        return self.cumul(m)
+    def prob_distr(m):
+        return self.prob(m)
+    def next_message(m):
+        return self.next_msg(m)
+    def get_inverse_cumul_distr_samples():
+        return self.inverse_samples()
+    
+        

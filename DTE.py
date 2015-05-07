@@ -4,19 +4,21 @@
 # using the API for a message space described in probabilityfunctionAPI.py
 
 import random
+import probabilityfunctionAPI
 
 # Define length of seed space
 SEED_SPACE_LENGTH = 128
 seed_space = 2**SEED_SPACE_LENGTH - 1
 
 """
-Takes in a message and returns a corresponding random bit string in
+Takes in a message and a MessageSpaceProbabilityFxns object
+and returns a corresponding random bit string in
 the seed space.
 """
-def encode(m):
+def encode(m, pfxns):
     # get range of seed space to pick random string from
-    start = cumul_distr(m) * seed_space
-    end = int(start + prob_distr(m)*seed_space) - 1 
+    start = pfxns.cumul_distr(m) * seed_space
+    end = int(start + pfxns.prob_distr(m)*seed_space) - 1 
     start = int(start)
 
     # pick random string from corresponding seed space
@@ -45,18 +47,20 @@ def binary_search(table, start, end, value):
     
 
 """
-Runs binary search on pre-calculated inverse sampling table and linear
+Takes in a seed and a MessageSpaceProbabilityFxns object and
+runs binary search on pre-calculated inverse sampling table and linear
 search to find corresponding message.
 """
-def decode(s, table):
+def decode(s, pfxns):
+    table = pfxns.get_inverse_cumul_distr_samples()
     (prev_value, prev_msg) = binary_search(table, 0, len(table), s)
-    next_msg = next_message(prev_msg)
-    next_value = cumul_distr(next_msg)
+    next_msg = pfxns.next_message(prev_msg)
+    next_value = pfxns.cumul_distr(next_msg)
     # begin linear scan to find which range seed s falls in
     while s >= next_value:
         # update prev and next
         (prev_value, prev_msg) = (next_value, next_msg)
-        next_msg = next_message(prev_msg)
-        next_value = cumul_distr(next_msg)
+        next_msg = pfxns.next_message(prev_msg)
+        next_value = pfxns.cumul_distr(next_msg)
     
     return prev_msg
