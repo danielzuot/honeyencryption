@@ -7,7 +7,7 @@ import random
 import probabilityfunctionAPI
 
 # Define length of seed space
-SEED_SPACE_LENGTH = 128
+SEED_SPACE_LENGTH = 64
 seed_space = 2**SEED_SPACE_LENGTH - 1
 
 """
@@ -33,17 +33,19 @@ Initial call : binary_search(table, 0, len(table), value)
 """
 def binary_search(table, start, end, value):
     size = end - start
+    print size
+    print str(start)+ " to " +str(end)
     # base case
-    if size == 1:
+    if size == 1 or size == 0:
         return table[start]
     
     mid = start + size/2
     (mid_value, mid_msg) = table[mid]
     # recursion step
-    if value > mid_value:
+    if value >= mid_value:
         return binary_search(table, mid, end, value)
     else:
-        return binary_search(table, start, mid+1, value)
+        return binary_search(table, start, mid, value)
     
 
 """
@@ -53,11 +55,16 @@ search to find corresponding message.
 """
 def decode(s, pfxns):
     table = pfxns.get_inverse_cumul_distr_samples()
-    (prev_value, prev_msg) = binary_search(table, 0, len(table), s)
+    print table
+    seed_loc = float(s)/seed_space
+    (prev_value, prev_msg) = binary_search(table, 0, len(table), seed_loc)
+    print "seed loc is " + str(seed_loc)
+    print "aaab loc is " + str(pfxns.cumul_distr("aaab"))
+    print prev_msg
     next_msg = pfxns.next_message(prev_msg)
     next_value = pfxns.cumul_distr(next_msg)
     # begin linear scan to find which range seed s falls in
-    while s >= next_value:
+    while seed_loc >= next_value:
         # update prev and next
         (prev_value, prev_msg) = (next_value, next_msg)
         next_msg = pfxns.next_message(prev_msg)

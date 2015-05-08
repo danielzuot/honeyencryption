@@ -51,13 +51,13 @@ class MessageSpaceProbabilityFxns:
         self.next_msg = next_msg
         self.inverse_samples = inverse_samples
         
-    def cumul_distr(m):
-        return self.cumul(m)
-    def prob_distr(m):
-        return self.prob(m)
-    def next_message(m):
-        return self.next_msg(m)
-    def get_inverse_cumul_distr_samples():
-        return self.inverse_samples()
+    def cumul_distr(self, m):
+        return self.cumul(self, m)
+    def prob_distr(self, m):
+        return self.prob(self, m)
+    def next_message(self, m):
+        return self.next_msg(self, m)
+    def get_inverse_cumul_distr_samples(self):
+        return self.inverse_samples(self)
     
         

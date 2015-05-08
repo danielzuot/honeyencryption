@@ -13,7 +13,7 @@ letter_prob : dict of letter to probability - sum of all letters is 1
 msg_len : number of letters per message
 """
 
-import probabilityfunctionAPI
+from probabilityfunctionAPI import MessageSpaceProbabilityFxns
 
 
 """
@@ -54,11 +54,11 @@ class GenericAlphabetProbabilityFxns(MessageSpaceProbabilityFxns):
         self.letter_prob = letter_prob
         self.msg_len = msg_len
         self.letter_cumul = create_cumul_fxn(alphabet, letter_prob)
-        self.letter_order = create_letter_order_dict
+        self.letter_order = create_letter_order_dict(alphabet)
         self.inverse_table = create_inverse_sample_table(alphabet, self.letter_cumul, msg_len)
 
         # define probability distribution fxn
-        def prob(m):
+        def prob(self, m):
             # product of each letter's probability
             product = 1
             for l in m:
@@ -66,15 +66,16 @@ class GenericAlphabetProbabilityFxns(MessageSpaceProbabilityFxns):
             return product
 
         # define cumul distribution fxn
-        def cumul(m):
-            # product of each letter's cumulative probability
-            product = 1
-            for l in m:
-                product *= self.letter_cumul[l]
-            return product
+        def cumul(self, m):
+            # sum of each index cumulative contribution
+            value = 0
+            for i in range(1, self.msg_len)[::-1]:
+                value += self.letter_cumul[m[i]]
+                value *= self.letter_prob[m[i-1]]
+            return value
 
         # define next message fxn
-        def next_msg(m):
+        def next_msg(self,m):
             least_sig_index = -1
             # Find index of message to increment letter
             for i in range(msg_len)[::-1]:
@@ -89,7 +90,7 @@ class GenericAlphabetProbabilityFxns(MessageSpaceProbabilityFxns):
             return m[:least_sig_index] + new_letter + alphabet[0]*(self.msg_len - least_sig_index - 1)
 
         # create get sample table
-        def get_inverse_table():
+        def get_inverse_table(self):
             return self.inverse_table
 
         # Initialize MessageSpaceProbabilityFxns
