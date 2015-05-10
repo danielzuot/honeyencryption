@@ -36,7 +36,7 @@ def create_inverse_sample_table(alphabet, letter_cumul, msg_len):
     return []
 
 
-class GenericAlphabetProbabilityFxns(MessageSpaceProbabilityFxns):
+class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
 
     def __init__(self, prefix_prob, prefix_lengths):
         self.prefix_prob = prefix_prob
@@ -51,7 +51,7 @@ class GenericAlphabetProbabilityFxns(MessageSpaceProbabilityFxns):
             for i in range(6):
                 prefix[i] = m[i]
                 if ''.join(prefix) in self.prefix_prob:
-                    
+
             
 
         # define cumul distribution fxn
