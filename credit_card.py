@@ -51,6 +51,11 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
 
         # given random message string, return message with last digit appended such that new string is Luhn-valid
         def luhn(self, m):
+            sum = 0
+            for i in range(len(str(m))):
+                sum += int(i)
+            last = 9 * sum % 10
+            return m * 10 + last
 
 
         # define probability distribution fxn

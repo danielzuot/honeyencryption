@@ -91,7 +91,8 @@ def analyze(data):
     return 'True: ' + str(true) + '\n' + 'False: ' + str(false)
 
 # Writes data in contents to file specified by filepath.
-# Input: filepath path to file to be written to
+# Input: f
+ilepath path to file to be written to
 #        contents dictionary of keys to be written
 def writeFile(filepath, contents):
     # Clear file if not empty
