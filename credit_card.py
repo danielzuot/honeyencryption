@@ -52,11 +52,8 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
         # given random message string, return message with last digit appended such that new string is Luhn-valid
         def luhn(self, m):
             sum = 0
-            for i in range(len(str(m))):
-                sum += int(i)
-            last = 9 * sum % 10
-            return m * 10 + last
-
+            [sum += int(i) for i in range(len(str(m)))]
+            return m * 10 + (9 * sum % 10)
 
         # define probability distribution fxn
         def prob(self, m):
@@ -99,6 +96,12 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
         # create get sample table
         def get_inverse_table(self):
             return self.inverse_table
+
+        # helper function to get denominator of prefix probabilities
+        def getTotalProbability(bin):
+            sum = 0
+            [sum += bin[i][1] for i in bin]
+            return sum
 
         # Initialize MessageSpaceProbabilityFxns
         MessageSpaceProbabilityFxns.__init__(self, cumul, prob, next_msg, get_inverse_table)
