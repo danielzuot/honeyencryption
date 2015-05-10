@@ -117,7 +117,7 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
         # helper function to get denominator of prefix probabilities
         def getTotalProbability(bin):
             sum = 0
-            [sum += bin[i][1] for i in bin]
+            [sum += bin[i][2] for i in bin]
             return sum
 
         # Initialize MessageSpaceProbabilityFxns
