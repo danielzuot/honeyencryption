@@ -7,7 +7,18 @@ from credit_card import *
 from DTE import *
 
 
-# Create prefix_prob and prefix_lengths dictionaries
+''' Create prefix_prob and prefix_lengths dictionaries 
+i.e. 
+prefix_prob = {
+    '5235**' -> 0.0001
+    '4*****' -> 0.1
+}
+prefix_lengths = {
+    '5235**' -> 16
+    '4*****' -> 15
+}
+
+'''
 prefix_prob = {}
 prefix_lengths = {}
 
