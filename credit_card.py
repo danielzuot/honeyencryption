@@ -25,7 +25,7 @@ def create_cumul_fxn(prefix_order, prefix_prob):
     for prefix in prefix_order:
         prefix_cumul[prefix] = cumul_prob
         cumul_prob += prefix_prob[prefix]
-    return 
+    return prefix_cumul
 
 """
 Creates list of ordered prefixes
@@ -36,8 +36,15 @@ def create_prefix_ordered_list(prefix_prob):
 """
 Create inverse sampling table
 """
-def create_inverse_sample_table(alphabet, letter_cumul, msg_len):
-    return []
+def create_inverse_sample_table(prefix_order, prefix_cumul, prefix_lengths):
+    table = [] #prob, m
+    for prefix in prefix_order:
+        #'******'
+        cumul_prob = prefix_cumul[prefix]
+        num_prefix = prefix.replace('*','0')
+        m = str(luhn(num_prefix+'0'*(prefix_lengths[prefix]-7)))
+        table.append(cumul_prob,m)
+    return table
 
 
 class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
@@ -47,7 +54,7 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
         self.prefix_lengths = prefix_lengths
         self.prefix_order = create_prefix_ordered_list(prefix_prob)
         self.prefix_cumul = create_cumul_fxn(self.prefix_order, prefix_prob)
-        #self.inverse_table = create_inverse_sample_table(alphabet, self.letter_cumul, msg_len)
+        self.inverse_table = create_inverse_sample_table(self.prefix_order, self.prefix_cumul, prefix_lengths)
 
         # given random message string, return message with last digit appended such that new string is Luhn-valid
         def luhn(self, m):
@@ -88,13 +95,13 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
                     totalCumul = prefixCumul + int(randomDigs)*pow(10,-numRandomDigs)
                     return totalCumul
             print "Invalid credit card"
-            return 0
+            return -1
 
         # define next message fxn
         # simplified to never carry over to another prefix
         def next_msg(self,m):
             baseNumber = int(m[:-1])
-            return luhn(baseNumber+1)
+            return str(luhn(baseNumber+1))
 
         # create get sample table
         def get_inverse_table(self):
