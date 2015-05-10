@@ -8,20 +8,24 @@
 """
 Requires: 
 
-Dictionary of prefix-probabilities {'prefix',prob(prefix)}
-Dictionary of prefix-lengths {'prefix',numberLength}
+Dictionary of prefix-probabilities {'prefix',prob(prefix)}, where sum of all prob(prefix) = 1
+Dictionary of prefix-lengths {'prefix',length}, where length = number of digits in credit cards with prefix 'prefix'
 
 """
 
 from probabilityfunctionAPI import MessageSpaceProbabilityFxns
-
+import math
 
 """
 Creates prefix cumulative probability distribution
 """
-def create_cumul_fxn(prefix_prob):
-
-    return []
+def create_cumul_fxn(prefix_order, prefix_prob):
+    cumul_prob = 0
+    prefix_cumul = {}
+    for prefix in prefix_order:
+        prefix_cumul[prefix] = cumul_prob
+        cumul_prob += prefix_prob[prefix]
+    return 
 
 """
 Creates list of ordered prefixes
@@ -41,42 +45,51 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
     def __init__(self, prefix_prob, prefix_lengths):
         self.prefix_prob = prefix_prob
         self.prefix_lengths = prefix_lengths
-        self.letter_cumul = create_cumul_fxn(prefix_prob)
-        self.letter_order = create_prefix_ordered_list(prefix_prob)
-        self.inverse_table = create_inverse_sample_table(alphabet, self.letter_cumul, msg_len)
+        self.prefix_order = create_prefix_ordered_list(prefix_prob)
+        self.prefix_cumul = create_cumul_fxn(self.prefix_order, prefix_prob)
+        #self.inverse_table = create_inverse_sample_table(alphabet, self.letter_cumul, msg_len)
+
+        # given random message string, return message with last digit appended such that new string is Luhn-valid
+        def luhn(self, m):
+
 
         # define probability distribution fxn
         def prob(self, m):
             prefix = list('******')
             for i in range(6):
                 prefix[i] = m[i]
-                if ''.join(prefix) in self.prefix_prob:
-
-            
+                prefixStr = ''.join(prefix)
+                if prefixStr in self.prefix_prob:
+                    prefixProb = self.prefix_prob[prefixStr]
+                    #last digit is the check dig
+                    randomDigs = m[6:-1]
+                    numRandomDigs = len(randomDigs)
+                    prob = prefixProb * math.pow(10,-numRandomDigs)
+                    return prob
+            print "Invalid credit card"
+            return 0
 
         # define cumul distribution fxn
         def cumul(self, m):
-            # sum of each index cumulative contribution
-            value = 0
-            for i in range(1, self.msg_len)[::-1]:
-                value += self.letter_cumul[m[i]]
-                value *= self.letter_prob[m[i-1]]
-            return value
+            prefix = list('******')
+            for i in range(6):
+                prefix[i] = m[i]
+                prefixStr = ''.join(prefix)
+                if prefixStr in self.prefix_prob:
+                    #last digit is the check dig
+                    randomDigs = m[6:-1]
+                    numRandomDigs = len(randomDigs)
+                    prefixCumul = prefix_cumul[prefixStr]
+                    totalCumul = prefixCumul + int(randomDigs)*pow(10,-numRandomDigs)
+                    return totalCumul
+            print "Invalid credit card"
+            return 0
 
         # define next message fxn
+        # simplified to never carry over to another prefix
         def next_msg(self,m):
-            least_sig_index = -1
-            # Find index of message to increment letter
-            for i in range(msg_len)[::-1]:
-                if m[i] != alphabet[-1]:
-                    least_sig_index = i
-                    break
-            if least_sig_index == -1:
-                print "no next message - max message"
-                return m
-            # Increase letter order of index
-            new_letter = self.alphabet[self.letter_order[m[least_sig_index]] + 1]
-            return m[:least_sig_index] + new_letter + alphabet[0]*(self.msg_len - least_sig_index - 1)
+            baseNumber = int(m[:-1])
+            return luhn(baseNumber+1)
 
         # create get sample table
         def get_inverse_table(self):
