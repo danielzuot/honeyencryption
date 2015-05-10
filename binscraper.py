@@ -46,11 +46,9 @@ def addLengths(data, prefix_length_dict):
         for prefix in prefixes:
             for s in prefix:
                 for p in data:
-                    if p[0:len(str(s))-1] == str(s):
+                    if p[0:len(str(s))] == str(s):
                         data[p].append(length)
-    for p in data:
-        if len(data[p]) < 2:
-            data[p].append(False)
+    [data[p].append(16) for p in data if len(data[p]) < 2]
     return data
 
 def analyze(data):
@@ -80,7 +78,9 @@ def writeFile(filepath, contents):
 if __name__ == '__main__':
     src = getSource("http://www.stevemorse.org/ssn/List_of_Bank_Identification_Numbers.html")
     f = open('prefix_lengths.txt', 'r')
+    g = open('bin.txt', 'r')
     writeFile('bin.txt', getPrefixProbability(addLengths(matchStrings(src), eval(f.read()))))
+    # print analyze(eval(g.read()))
 
 
 
