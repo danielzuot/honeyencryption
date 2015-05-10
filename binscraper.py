@@ -23,8 +23,47 @@ def matchStrings(text):
             if iin in bins:
                 pass
             else: 
-                bins[iin] = 6 - j
+                bins[iin] = [6 - j]
     return bins
+
+# Helper method to turn int list into list of strings
+def stringify(array):
+    list = []
+    for i in array:
+        list.append(str(i))
+    return list
+
+# Gives each prefix a probability numerator
+def getPrefixProbability(bin):
+    [bin[i].append(10**(bin[i][0])) for i in bin]
+    return bin
+
+# Gives each prefix a total card length
+def addLengths(data, prefix_length_dict):
+    for i in prefix_length_dict:
+        prefixes = prefix_length_dict[i][1:]
+        length = prefix_length_dict[i][0]
+        for prefix in prefixes:
+            for s in prefix:
+                for p in data:
+                    if p[0:len(str(s))] == str(s):
+                        data[p].append(length)
+    [data[p].append(16) for p in data if len(data[p]) < 2]
+    return data
+
+def analyze(data):
+    true = 0
+    false = 0
+    for i in data:
+        if data[i][1] != False:
+            true += 1
+        else:
+            false += 1
+    return 'True: ' + str(true) + '\n' + 'False: ' + str(false)
+
+def getData():
+    f = open('bin.txt', 'r')
+    return eval(f.read())
 
 # Writes data in contents to file specified by filepath.
 # Input: filepath path to file to be written to
@@ -34,9 +73,16 @@ def writeFile(filepath, contents):
     open(filepath, 'w').close()
     # Write to file
     f = open(filepath, 'w')
-    for j in contents:
-        f.write(j + ', ' + str(contents[j]) + '\n')
+    f.write(str(contents))
 
 if __name__ == '__main__':
     src = getSource("http://www.stevemorse.org/ssn/List_of_Bank_Identification_Numbers.html")
-    writeFile('bin.txt', matchStrings(src))
+    f = open('prefix_lengths.txt', 'r')
+    g = open('bin.txt', 'r')
+    writeFile('bin.txt', getPrefixProbability(addLengths(matchStrings(src), eval(f.read()))))
+    # print analyze(eval(g.read()))
+
+
+
+
+
