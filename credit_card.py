@@ -42,10 +42,17 @@ def create_inverse_sample_table(prefix_order, prefix_cumul, prefix_lengths):
         #'******'
         cumul_prob = prefix_cumul[prefix]
         num_prefix = prefix.replace('*','0')
-        m = str(luhn(num_prefix+'0'*(prefix_lengths[prefix]-7)))
-        table.append(cumul_prob,m)
+        m = str(luhn(int(num_prefix+'0'*(prefix_lengths[prefix]-7))))
+        table.append((cumul_prob,m))
     return table
 
+# given random message string as int, return int message with last digit appended such that new string is Luhn-valid
+def luhn(m):
+    sum = 0
+    for i in range(len(str(m))):
+        sum += int(i)
+    last = 9 * sum % 10
+    return m * 10 + last
 
 class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
 
@@ -68,11 +75,14 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
             for i in range(6):
                 prefix[i] = m[i]
                 prefixStr = ''.join(prefix)
+                print prefixStr
                 if prefixStr in self.prefix_prob:
                     prefixProb = self.prefix_prob[prefixStr]
                     #last digit is the check dig
                     randomDigs = m[6:-1]
                     numRandomDigs = len(randomDigs)
+                    print randomDigs
+                    print numRandomDigs
                     prob = prefixProb * math.pow(10,-numRandomDigs)
                     return prob
             print "Invalid credit card"
@@ -88,7 +98,7 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
                     #last digit is the check dig
                     randomDigs = m[6:-1]
                     numRandomDigs = len(randomDigs)
-                    prefixCumul = prefix_cumul[prefixStr]
+                    prefixCumul = self.prefix_cumul[prefixStr]
                     totalCumul = prefixCumul + int(randomDigs)*pow(10,-numRandomDigs)
                     return totalCumul
             print "Invalid credit card"
