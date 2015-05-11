@@ -13,26 +13,20 @@ prefixes = {
     '5235**': [2, 8, 1],
     '123456': [5, 8, 1]
 }
-
 '''
 
-prefixes = {
-    '5235**': [2, 8, 100],
-    '123456': [0, 8, 1]
-}
-
-#with open('bin.txt','r') as bin:
-#    prefixes = eval(bin.read())
+with open('bin.txt','r') as bin:
+    prefixes = eval(bin.read())
 
 
 
 # Create probability fxns
 credit_card_fxns = CreditCardProbabilityFxns(prefixes)
-print credit_card_fxns.next_message('52350070')
+
+
 # Use DTE on random example which is definitely not my actual credit card number
-'''seed = encode("4264510252697811", credit_card_fxns)
-#print hex(seed)
+seed = encode("4117700064669797", credit_card_fxns)
+print hex(seed)
 
 message = decode(seed, credit_card_fxns)
-#print message
-'''
+print message
