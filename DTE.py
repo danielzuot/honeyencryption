@@ -59,10 +59,12 @@ def decode(s, pfxns):
     seed_loc = float(s)/seed_space
     (prev_value, prev_msg) = binary_search(table, 0, len(table), seed_loc)
     print "seed loc is " + str(seed_loc)
-    print "aaab loc is " + str(pfxns.cumul_distr("aaab"))
-    print prev_msg
+    print "prev message " + prev_msg
+    print prev_value
     next_msg = pfxns.next_message(prev_msg)
     next_value = pfxns.cumul_distr(next_msg)
+    if next_msg == prev_msg: # at max message
+        return prev_msg
     # begin linear scan to find which range seed s falls in
     while seed_loc >= next_value:
         # update prev and next

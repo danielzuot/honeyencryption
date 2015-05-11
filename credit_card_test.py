@@ -7,27 +7,28 @@ from credit_card import *
 from DTE import *
 
 
-''' Create prefix_prob and prefix_lengths dictionaries 
+''' Create prefixes dictionary 'prefix': [numRandom, cardLength, probWeight]
 i.e. 
-prefix_prob = {
-    '5235**': 0.0001
-    '4*****': 0.1
-}
-prefix_lengths = {
-    '5235**': 16
-    '4*****'"" 15
+prefixes = {
+    '5235**': [2, 8, 1],
+    '123456': [5, 8, 1]
 }
 
 '''
-prefix_prob = {'414***':0.2, '5*****':0.8}
-prefix_lengths = {'414***':8,'5*****':10}
 
+prefixes = {
+    '5235**': [2, 8, 100],
+    '123456': [0, 8, 1]
+}
+
+#with open('bin.txt','r') as bin:
+#    prefixes = eval(bin.read())
 
 
 
 # Create probability fxns
-credit_card_fxns = CreditCardProbabilityFxns(prefix_prob,prefix_lengths)
-print credit_card_fxns.cumul_distr('41401122')
+credit_card_fxns = CreditCardProbabilityFxns(prefixes)
+print credit_card_fxns.next_message('52350070')
 # Use DTE on random example which is definitely not my actual credit card number
 '''seed = encode("4264510252697811", credit_card_fxns)
 #print hex(seed)
