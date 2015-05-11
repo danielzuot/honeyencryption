@@ -78,7 +78,6 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
                     prefixProb = 1.0 / self.total_prob
                     #last digit is the check dig
                     randomDigs = m[6:-1]
-                    print 'Random digs = '+str(randomDigs)
                     numRandomDigs = len(randomDigs)
                     prob = prefixProb * math.pow(10,-numRandomDigs)
                     return prob
@@ -87,7 +86,7 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
 
         # define cumul distribution fxn
         def cumul(self, m):
-            print m
+            #print m
             prefix = list('******')
             for i in range(6):
                 prefix[i] = m[i]
