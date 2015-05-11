@@ -39,8 +39,24 @@ def create_letter_order_dict(alphabet):
 """
 Create inverse sampling table
 """
-def create_inverse_sample_table(alphabet, letter_cumul, msg_len):
+def create_inverse_sample_table(alphabet, letter_cumul, msg_len):    
     table = [] #(prob, m)
+
+    if msg_len >= 10:
+        pad = alphabet[0] * (msg_len - 10)
+        for l1 in alphabet:
+            for l2 in alphabet:
+                for l3 in alphabet:
+                    for l4 in alphabet:
+                        for l5 in alphabet:
+                            for l6 in alphabet:
+                                for l7 in alphabet:
+                                    for l8 in alphabet:
+                                        for l9 in alphabet:
+                                            for l10 in alphabet:
+                                                m = l1+l2+l3+l4+l5+l6+l7+l8+l9+l10+pad
+                                                table.append((
+    
     pad = alphabet[0]*(msg_len - 1)
     for l in alphabet:
         table.append((letter_cumul[l], l + pad))
@@ -67,6 +83,9 @@ class GenericAlphabetProbabilityFxns(MessageSpaceProbabilityFxns):
 
         # define cumul distribution fxn
         def cumul(self, m):
+            # special case if msg_len is 1
+            if self.msg_len == 1:
+                return self.letter_cumul[m[0]]
             # sum of each index cumulative contribution
             value = 0
             for i in range(1, self.msg_len)[::-1]:
@@ -88,6 +107,32 @@ class GenericAlphabetProbabilityFxns(MessageSpaceProbabilityFxns):
             # Increase letter order of index
             new_letter = self.alphabet[self.letter_order[m[least_sig_index]] + 1]
             return m[:least_sig_index] + new_letter + alphabet[0]*(self.msg_len - least_sig_index - 1)
+
+        # create inverse sampling table
+        def create_inverse_sample_table(self, alphabet, letter_cumul, msg_len):    
+            table = [] #(prob, m)
+            alphabet = self.alphabet
+            letter_cumul = self.letter_cumul
+            
+            if msg_len >= 10:
+                pad = alphabet[0] * (msg_len - 10)
+                for l1 in alphabet:
+                    for l2 in alphabet:
+                        for l3 in alphabet:
+                            for l4 in alphabet:
+                                for l5 in alphabet:
+                                    for l6 in alphabet:
+                                        for l7 in alphabet:
+                                            for l8 in alphabet:
+                                                for l9 in alphabet:
+                                                    for l10 in alphabet:
+                                                        m = l1+l2+l3+l4+l5+l6+l7+l8+l9+l10+pad
+                                                        table.append((
+    
+            pad = alphabet[0]*(msg_len - 1)
+            for l in alphabet:
+                table.append((letter_cumul[l], l + pad))
+            return table
 
         # create get sample table
         def get_inverse_table(self):
