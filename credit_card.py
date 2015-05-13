@@ -43,14 +43,9 @@ def create_prefix_ordered_list(prefixes):
 """
 Create inverse sampling table
 """
-def create_inverse_sample_table(prefix_order, prefix_cumul, prefixes):
-    table = [] #prob, m
-    for prefix in prefix_order:
-        #'******'
-        cumul_prob = prefix_cumul[prefix]
-        num_prefix = prefix.replace('*','0')
-        m = str(luhn(int(num_prefix+'0'*(prefixes[prefix][1]-7))))
-        table.append((cumul_prob,m))
+def create_inverse_sample_table():
+    with open('inverse_table.txt','r') as f:
+        table = eval(f.read())
     return table
 
 # given random message string as int, return int message with last digit appended such that new string is Luhn-valid
@@ -68,7 +63,7 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
         self.prefix_order = create_prefix_ordered_list(prefixes)
         self.total_prob = getTotalProbability(prefixes)
         self.prefix_cumul = create_cumul_fxn(self.prefix_order, prefixes, self.total_prob)
-        self.inverse_table = create_inverse_sample_table(self.prefix_order, self.prefix_cumul, prefixes)
+        self.inverse_table = create_inverse_sample_table()
 
 
         # define probability distribution fxn
@@ -83,7 +78,6 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
                     prefixProb = 1.0 / self.total_prob
                     #last digit is the check dig
                     randomDigs = m[6:-1]
-                    print 'Random digs = '+str(randomDigs)
                     numRandomDigs = len(randomDigs)
                     prob = prefixProb * math.pow(10,-numRandomDigs)
                     return prob
@@ -92,6 +86,7 @@ class CreditCardProbabilityFxns(MessageSpaceProbabilityFxns):
 
         # define cumul distribution fxn
         def cumul(self, m):
+            #print m
             prefix = list('******')
             for i in range(6):
                 prefix[i] = m[i]

@@ -33,8 +33,6 @@ Initial call : binary_search(table, 0, len(table), value)
 """
 def binary_search(table, start, end, value):
     size = end - start
-    print size
-    print str(start)+ " to " +str(end)
     # base case
     if size == 1 or size == 0:
         return table[start]
@@ -55,12 +53,8 @@ search to find corresponding message.
 """
 def decode(s, pfxns):
     table = pfxns.get_inverse_cumul_distr_samples()
-    print table
     seed_loc = float(s)/seed_space
     (prev_value, prev_msg) = binary_search(table, 0, len(table), seed_loc)
-    print "seed loc is " + str(seed_loc)
-    print "prev message " + prev_msg
-    print prev_value
     next_msg = pfxns.next_message(prev_msg)
     next_value = pfxns.cumul_distr(next_msg)
     if next_msg == prev_msg: # at max message
