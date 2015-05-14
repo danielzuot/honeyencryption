@@ -11,8 +11,8 @@ from random import randint
 ''' Create prefixes dictionary 'prefix': [numRandom, cardLength, probWeight]
 i.e. 
 prefixes = {
-    '5235**': [2, 8, 1],
-    '123456': [5, 8, 1]
+    '5235**': [2, 8, 100],
+    '123456': [0, 8, 1]
 }
 '''
 with open('bin.txt','r') as bin:
@@ -22,13 +22,14 @@ with open('bin.txt','r') as bin:
 
 credit_card_example = '4117700001669792'
 secret_key = 2048101736616812280
-#guess_key = 3496328831800304765
+#guess_key =  2048101736616812280
+guess_key =  3496328831800304765
 
 # Create probability fxns
 credit_card_fxns = CreditCardProbabilityFxns(prefixes)
 
 
-# Use DTE on random example which is definitely not my actual credit card number
+# Use DTE on credit card example
 seed = encode(credit_card_example, credit_card_fxns)
 ciphertext = secret_key ^ seed
 decipher_seed = guess_key ^ ciphertext
