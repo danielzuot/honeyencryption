@@ -85,6 +85,7 @@ def removeRepetitions(bin):
     for m in bin:
         if m not in newbin:
             newbin2[m] = bin[m]
+    print newbin2
     # writeFile('bin.txt', newbin2)
 
 # Writes data in contents to file specified by filepath.
@@ -104,7 +105,8 @@ if __name__ == '__main__':
     # writeFile('bin.txt', getPrefixProbability(addLengths(matchStrings(src), eval(f.read()))))
     # print analyze(eval(g.read()))
     # print eval(g.read())
-    writeFile('bin.txt', remove(eval(g.read())))
+    # removeRepetitions(eval(g.read()))
+    # writeFile('bin.txt', remove(eval(g.read())))
 
 
 
